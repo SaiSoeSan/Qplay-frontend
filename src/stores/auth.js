@@ -148,12 +148,6 @@ const initializeAuth = () => {
   authToken.value = localStorage.getItem(AUTH_TOKEN) || null;
   tokenExpiry.value = localStorage.getItem(EXPIRES_IN) || null;
 
-  console.log("Auth initialized:", {
-    user: user.value,
-    authToken: authToken.value,
-    isAuthenticated: isAuthenticated.value,
-  });
-
   if (
     authToken.value &&
     tokenExpiry.value &&

@@ -3,7 +3,7 @@ import { clearAuth } from "@/stores/auth";
 class HttpClient {
   constructor() {
     this.baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost/api";
-    this.AUTH_TOKEN = import.meta.env.VITE_AUTH_TOKEN;
+    this.AUTH_TOKEN = import.meta.env.VITE_AUTH_TOKEN || "auth_token";
     this.EXPIRES_IN = "expires_in";
     this.USER = import.meta.env.VITE_USER;
   }
@@ -40,9 +40,19 @@ class HttpClient {
 
   refreshToken = async () => {
     try {
+      const currentToken = localStorage.getItem(this.AUTH_TOKEN);
+      if (!currentToken) {
+        throw new Error("No refresh token available");
+      }
+      // Use the current (expired) token for refresh request
       const response = await fetch(`${this.baseURL}/auth/refresh`, {
         method: "POST",
-        headers: this.getHeaders(),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Bearer ${currentToken}`, // Use current token directly
+        },
       });
       return await this.handleResponse(response);
     } catch (error) {
@@ -57,7 +67,7 @@ class HttpClient {
   };
 
   // Default headers
-  getHeaders(customHeaders = {}) {
+  async getHeaders(customHeaders = {}) {
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -65,7 +75,8 @@ class HttpClient {
       ...customHeaders,
     };
 
-    const authToken = this.getAuthToken();
+    const authToken = await this.getAuthToken();
+    // authorization is token is promise and it cause unauthorized error
     if (authToken) {
       headers.Authorization = authToken;
     }
@@ -91,7 +102,7 @@ class HttpClient {
     try {
       const response = await fetch(`${this.baseURL}${url}`, {
         method: "GET",
-        headers: this.getHeaders(headers),
+        headers: await this.getHeaders(headers),
       });
       return await this.handleResponse(response);
     } catch (error) {
@@ -104,7 +115,7 @@ class HttpClient {
     try {
       const response = await fetch(`${this.baseURL}${url}`, {
         method: "POST",
-        headers: this.getHeaders(headers),
+        headers: await this.getHeaders(headers),
         body: JSON.stringify(data),
       });
       return await this.handleResponse(response);
@@ -118,7 +129,7 @@ class HttpClient {
     try {
       const response = await fetch(`${this.baseURL}${url}`, {
         method: "PUT",
-        headers: this.getHeaders(headers),
+        headers: await this.getHeaders(headers),
         body: JSON.stringify(data),
       });
       return await this.handleResponse(response);
@@ -132,7 +143,7 @@ class HttpClient {
     try {
       const response = await fetch(`${this.baseURL}${url}`, {
         method: "DELETE",
-        headers: this.getHeaders(headers),
+        headers: await this.getHeaders(headers),
       });
       return await this.handleResponse(response);
     } catch (error) {
@@ -145,7 +156,7 @@ class HttpClient {
     try {
       const response = await fetch(`${this.baseURL}${url}`, {
         method: "PATCH",
-        headers: this.getHeaders(headers),
+        headers: await this.getHeaders(headers),
         body: JSON.stringify(data),
       });
       return await this.handleResponse(response);

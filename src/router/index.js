@@ -6,6 +6,7 @@ import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import StudentHomeView from "@/views/StudentHomeView.vue";
 import AdminHomeView from "@/views/AdminHomeView.vue";
+import CreateQuestionSetView from "@/views/CreateQuestionSetView.vue";
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     path: "/admin/dashboard",
     name: "AdminHomeView",
     component: AdminHomeView,
+  },
+  {
+    path: "/admin/question-sets/create",
+    name: "CreateQuestionSet",
+    component: CreateQuestionSetView,
   },
   {
     path: "/student/dashboard",

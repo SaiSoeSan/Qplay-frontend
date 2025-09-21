@@ -23,6 +23,8 @@ export class ValidationService {
   }
 
   static validateRegistrationForm(userData) {
+    if (!userData.name) return "Name is required";
+
     const emailError = this.validateEmail(userData.email);
     if (emailError) return emailError;
 
@@ -32,8 +34,6 @@ export class ValidationService {
     if (userData.password !== userData.password_confirmation) {
       return "Passwords do not match";
     }
-
-    if (!userData.name) return "Name is required";
 
     return null;
   }

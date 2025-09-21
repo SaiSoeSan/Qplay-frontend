@@ -6,8 +6,6 @@
       </div>
       <div class="nav-links">
         <router-link to="/" class="nav-link">Home</router-link>
-
-        <!-- Show login/register links only when not authenticated -->
         <template v-if="!isAuthenticated">
           <router-link to="/login" class="nav-link">Login</router-link>
           <router-link to="/register" class="nav-link">Register</router-link>
