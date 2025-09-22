@@ -44,32 +44,26 @@ const totalQuestions = ref(0);
 const totalStudents = ref(0);
 const totalAttempts = ref(0);
 
-// Methods
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
-
 const handleAddQuestionSet = () => {
-  console.log("Add new question set");
   // Navigate to question set creation page
   router.push("/admin/question-sets/create");
 };
 
 const handleViewDetails = (questionSet) => {
-  console.log("View details for:", questionSet.title);
-  // Navigate to question set details page
-  router.push(`/admin/question-sets/${questionSet.id}`);
+  // Navigate to question set details page with data as state
+  router.push({
+    name: "QuestionSetDetail",
+    params: { id: questionSet.id },
+  });
 };
 
 const handleEditQuestionSet = (questionSet) => {
   console.log("Edit question set:", questionSet.title);
-  // Navigate to question set edit page
-  router.push(`/admin/question-sets/${questionSet.id}/edit`);
+  // Navigate to question set edit page with data as state
+  router.push({
+    path: `/admin/question-sets/${questionSet.id}/edit`,
+    state: { questionSetData: questionSet },
+  });
 };
 
 const fetchDashboardData = async () => {

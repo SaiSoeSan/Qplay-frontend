@@ -37,5 +37,5 @@ defineProps({
     required: true,
   },
 });
-defineEmits(["add-question-set"]);
+defineEmits(["add-question-set", "view-details", "edit-question-set"]);
 </script>
